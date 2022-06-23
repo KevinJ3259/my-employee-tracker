@@ -1,0 +1,28 @@
+{
+  "name": "my-employee-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  
+  "scripts": {
+    "start": "node .",
+    "schema": "node ./tables/department.js && node ./tables/employee.js && node ./tables/role.js",
+    "seeds": "node ./seeds.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevinJ3259/my-employee-tracker.git"
+  },
+  "author": "Kevin Jordan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KevinJ3259/my-employee-tracker/issues"
+  },
+  "homepage": "https://github.com/KevinJ3259/my-employee-tracker#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "dotenv": "^16.0.1",
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.3.3"
+  }
+}
