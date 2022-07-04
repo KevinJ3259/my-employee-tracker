@@ -1,4 +1,4 @@
-const connection = require("../sql");
+const connection = require("../../sql");
 
 connection.query(
   `

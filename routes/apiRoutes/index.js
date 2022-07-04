@@ -10,7 +10,7 @@ require("console.table");
 
 // connection.connect();
 
-const connection = require("./sql");
+const connection = require("../../sql");
 
 const inquirer = require("inquirer");
 
@@ -157,7 +157,7 @@ async function start() {
         {
           name: "last_name",
           type: "input",
-          message: "What is the employee's last_name",
+          message: "What is the employee's last_name?",
         },
         {
           name: "role_name",
