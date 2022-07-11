@@ -1,27 +1,75 @@
 const connection = require("../../sql");
 
-connection.query(
-  `
-   DROP TABLE IF EXISTS employee
-  `,
-  function (error, results, fields) {
-    if (error) throw error;
+// view all employees in the database
+function viewEmployees() {
+  var query = "SELECT * FROM employee";
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+    console.log(res.length + " employees found!");
+    console.table("All Employees:", res);
+    options();
+  });
+}
 
-    connection.query(
-      `
-        create table employee(
-            id int primary key AUTO_INCREMENT, 
-            first_name varchar(30),
-            last_name varchar(30),
-            role_id int,
-            manager_id int
-        )
-      `,
-      function (error, results, fields) {
-        if (error) throw error;
+// add an employee to the database
+function addEmployee() {
+  connection.query("SELECT * FROM role", function (err, res) {
+    if (err) throw err;
+    inquirer
+      .prompt([
+        {
+          name: "first_name",
+          type: "input",
+          message: "What is the employee's fist name? ",
+        },
+        {
+          name: "last_name",
+          type: "input",
+          message: "What is the employee's last name? ",
+        },
+        {
+          name: "manager_id",
+          type: "input",
+          message: "What is the employee's manager's ID? ",
+        },
+        {
+          name: "role",
+          type: "list",
+          choices: function () {
+            var roleArray = [];
+            for (let i = 0; i < res.length; i++) {
+              roleArray.push(res[i].title);
+            }
+            return roleArray;
+          },
+          message: "What is this employee's role? ",
+        },
+      ])
+      .then(function (answer) {
+        let role_id;
+        for (let a = 0; a < res.length; a++) {
+          if (res[a].title == answer.role) {
+            role_id = res[a].id;
+            console.log(role_id);
+          }
+        }
+        connection.query(
+          "INSERT INTO employee SET ?",
+          {
+            first_name: answer.first_name,
+            last_name: answer.last_name,
+            manager_id: answer.manager_id,
+            role_id: role_id,
+          },
+          function (err) {
+            if (err) throw err;
+            console.log("Your employee has been added!");
+            options();
+          }
+        );
+      });
+  });
+}
 
-        process.exit();
-      }
-    );
-  }
-);
+//  delete an employee
+function deleteEmployee() {}
