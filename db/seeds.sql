@@ -1,5 +1,5 @@
 INSERT INTO department
-    (department_id, department_name)
+    (name)
 VALUES
     ('Sales'),
     ('Engineering'),
@@ -12,20 +12,21 @@ INSERT INTO role
 VALUES
     ('Salesperson', '80000', 1),
     ('Engineer', '150000', 2),
-    ('Software Engineer', '120000', 3),
-    ('Account Manager', '160000', 4),
-    ('Accountant', '125000', 5),
-    ('Legal Team Lead', '250000', 6),
-    ('Lawyer', '190000', 7);
+    ('Software Engineer', '120000', 2),
+    ('Account Manager', '160000', 3),
+    ('Accountant', '125000', 3),
+    ('Legal Team Lead', '250000', 4),
+    ('Lawyer', '190000', 4);
 
 INSERT INTO employee
     (first_name, last_name, role_id, manager_id)
 VALUES
-    ('Mike', 'Chan', 1, 213),
-    ('Ashley', 'Rodriguez', 2, 323),
-    ('Kevin', 'Tupik', 3, 913),
-    ('Kunal', 'Singh', 4, 816),
-    ('Malia', 'Brown', 5, 785),
-    ('Sarah', 'Lourd', 6, 818),
-    ('Tom', 'Allen', 7, 346);
+    ('Mike', 'Chan', 1, 8), -- NOTE: NULL means no manager.
+    ('Ashley', 'Rodriguez', 2, NULL),
+    ('Kevin', 'Tupik', 3, 2), -- NOTE: manager_id of 2 means Ashley is  manager.
+    ('Kunal', 'Singh', 4, NULL),
+    ('Malia', 'Brown', 5, 4),
+    ('Sarah', 'Lourd', 6, Null),
+    ('Tom', 'Allen', 7, 6),
+    ('John', 'Doe', 8, Null);
 

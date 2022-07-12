@@ -2,12 +2,13 @@
   "name": "my-employee-tracker",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   
   "scripts": {
-    "start": "node .",
-    "schema": "node ./tables/department.js && node ./tables/employee.js && node ./tables/role.js",
-    "seeds": "node ./seeds.js"
+    "db": "mysql -h localhost -u root -p < ./db/db.sql",
+    "schema": "mysql -h localhost -u root -p my_employee_tracker_db < ./db/schema.sql",
+    "seeds": "mysql -h localhost -u root -p my_employee_tracker_db < ./db/seeds.sql",
+    "start": "node ."
   },
   "repository": {
     "type": "git",
