@@ -16,6 +16,9 @@ Update employee roles
 
 Delete an employee
 
+Walthrough Video
+https://drive.google.com/file/d/1SYKqwcFNo8m5y6b-aKFMiG9GRRYqLUSB/view
+
 How to Use
 Open your terminal and change into the corresponding directory. Run "node app.js" and you will be prompted with options.
 
