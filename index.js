@@ -26,6 +26,10 @@ async function options() {
       "Add a role",
       "Update employee role",
       "Delete an employee",
+      "View employees by manager",
+      "View employees by department",
+      "Delete department",
+      "Delete role",
       "EXIT",
     ],
   });
@@ -55,6 +59,18 @@ async function options() {
     case "Delete an employee":
       await deleteEmployee();
       break;
+    case "View employees by manager":
+      await viewEmployeesByManager();
+      break;
+    case "View employees by department":
+      await viewEmployeesByDepartment();
+      break;
+    case "Delete department":
+      await deleteDepartment();
+      break;
+    case "Delete role":
+      await deleteRole();
+      break;
     case "EXIT":
       await exitApp();
       break;
@@ -76,9 +92,9 @@ function viewEmployees() {
           role.salary AS salary,
           CONCAT(M.first_name, ' ', M.last_name) AS "manager"
         FROM
-          employee AS E INNER JOIN role
+          employee AS E LEFT OUTER JOIN role
           ON E.role_id = role.id
-            INNER JOIN department
+            LEFT OUTER JOIN department
             ON role.department_id = department.id
               LEFT OUTER JOIN employee AS M
               ON E.manager_id = M.id
@@ -248,6 +264,154 @@ async function updateRole() {
   );
 }
 
-async function deleteEmployee() {}
+async function deleteEmployee() {
+  const answers = await inquirer.prompt([
+    {
+      name: "employee",
+      type: "input",
+      message: "Which employee do you want to delete?",
+    },
+  ]);
 
-async function exitApp() {}
+  await db.promise().query(
+    `
+        DELETE FROM 
+            employee 
+        WHERE
+            first_name = ?
+        AND last_name = ?
+    `,
+    [answers["employee"].split(" ")[0], answers["employee"].split(" ")[1]],
+    function (error, results, fields) {
+      if (error) throw error;
+      // console.log("The solution is: ", results[0].solution);
+    }
+  );
+}
+
+async function viewEmployeesByManager() {
+  const answers = await inquirer.prompt([
+    {
+      name: "manager",
+      type: "input",
+      message: "What manager's employees do you want to view?",
+    },
+  ]);
+
+  const results = await db.promise().query(
+    `
+        SELECT
+          E.id AS id,
+          E.first_name AS "first name",
+          E.last_name AS "last name",
+          role.title AS "job title",
+          department.name AS department,
+          role.salary AS salary,
+          CONCAT(M.first_name, ' ', M.last_name) AS "manager"
+        FROM
+          employee AS E LEFT OUTER JOIN role
+          ON E.role_id = role.id
+            LEFT OUTER JOIN department
+            ON role.department_id = department.id
+              LEFT OUTER JOIN employee AS M
+              ON E.manager_id = M.id
+        WHERE
+            M.first_name = ?
+        AND M.last_name = ?
+    `,
+    [answers["manager"].split(" ")[0], answers["manager"].split(" ")[1]]
+  );
+
+  console.log("\n");
+  console.table(results[0]);
+  console.log("\n");
+}
+
+async function viewEmployeesByDepartment() {
+  const answers = await inquirer.prompt([
+    {
+      name: "department",
+      type: "input",
+      message: "What department's employees do you want to view?",
+    },
+  ]);
+
+  const results = await db.promise().query(
+    `
+        SELECT
+          E.id AS id,
+          E.first_name AS "first name",
+          E.last_name AS "last name",
+          role.title AS "job title",
+          D.name AS department,
+          role.salary AS salary,
+          CONCAT(M.first_name, ' ', M.last_name) AS "manager"
+        FROM
+          employee AS E LEFT OUTER JOIN role
+          ON E.role_id = role.id
+            LEFT OUTER JOIN department AS D
+            ON role.department_id = D.id
+              LEFT OUTER JOIN employee AS M
+              ON E.manager_id = M.id
+        WHERE
+          D.name = ?
+    `,
+    [answers["department"]]
+  );
+
+  console.log("\n");
+  console.table(results[0]);
+  console.log("\n");
+}
+
+async function deleteDepartment() {
+  const answers = await inquirer.prompt([
+    {
+      name: "department",
+      type: "input",
+      message: "Which department do you want to delete?",
+    },
+  ]);
+
+  await db.promise().query(
+    `
+        DELETE FROM 
+            department 
+        WHERE
+            name = ?
+    `,
+    [answers["department"]],
+    function (error, results, fields) {
+      if (error) throw error;
+      // console.log("The solution is: ", results[0].solution);
+    }
+  );
+}
+
+async function deleteRole() {
+  const answers = await inquirer.prompt([
+    {
+      name: "role",
+      type: "input",
+      message: "Which role do you want to delete?",
+    },
+  ]);
+
+  await db.promise().query(
+    `
+        DELETE FROM 
+            role 
+        WHERE
+            title = ?
+    `,
+    [answers["role"]],
+    function (error, results, fields) {
+      if (error) throw error;
+      // console.log("The solution is: ", results[0].solution);
+    }
+  );
+}
+
+async function exitApp() {
+  process.exit();
+}
